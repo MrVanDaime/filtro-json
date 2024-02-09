@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+		<link rel="stylesheet" href="style.css" />
+		<title>Filtro de ícones</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="forms-container">
+				<div class="signin-signup">
+					<form action="#" class="sign-in-form">
+						<h2 class="title">Categoria de Icones</h2>
+						<div class="input-field" style="margin-bottom: 10px;">
+							<select class="input-group iconAboutGroup" id="sel_categorias">
+								<option value="">Todos</option>
+								<option value="acessibilidade">Acessibilidade</option>
+								<option value="alerta">Alerta</option>
+								<option value="alfabeto">Alfabeto</option>
+								<option value="animais">Animais</option>
+								<option value="setas">Setas</option>
+								<option value="astronomia">Astronomia</option>
+								<option value="veiculos">Veículos</option>
+								<option value="edificios">Edifícios</option>
+								<option value="negocios">Negócios</option>
+								<option value="acampamento">Acampamento</option>
+								<option value="caridade">Caridade</option>
+								<option value="graficos">Gráficos</option>
+								<option value="infancia">Infância</option>
+								<option value="roupas">Roupas</option>
+								<option value="codificacao">Codificação</option>
+								<option value="comunicacao">Comunicação</option>
+								<option value="conectividade">Conectividade</option>
+								<option value="construcao">Construção</option>
+								<option value="projeto">Projeto</option>
+							</select>
+						</div>
+						<h2 class="title">Listar os Icones</h2>
+						<div class="input-field" style="margin-bottom: 10px;">
+							<select class="input-group iconAboutGroup" id="sel_icones" >
+								<option value="">Todos</option>
+							</select>
+						</div>
+						<div class="">
+							<div id="iconAboutGroupViewsel" style="margin-top: 20px;">
+								<i class="fa-brands fa-accessible-icon fa-3x"></i>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="panels-container">
+				<div class="panel left-panel">
+					<div class="content">
+						<h1>Filtro em JSON</h1>
+					</div>
+					<img src="img/log.svg" class="image" alt="" />
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+	const icons_file = "icons.json";
+	const sel_icones = $( "#sel_icones" );
+	const sel_categorias = $( "#sel_categorias" );
+	let icons_json = [];
+	let categoria = "";
+	html = "";
+	icon_class = "";
+
+	// Cria todos os ícones
+	$.getJSON( icons_file, function( json ) {
+		icons_json = json['DATA'];
+		sort_icons( categoria );
+	});
+
+	function sort_icons( cat ){
+		sel_icones.html( "" );
+		html = "";
+		icons_json.forEach( function( item ) {
+			if( item.category == cat || cat == "" ) {
+				html += "<option value='" + item.icon + "'>" + item.icon + "</option>";
+			}
+		});
+
+		if ( html !== "" ) {
+			sel_icones.append( html );
+			get_iconClass();
+		} else {
+			alert( "Categoria não encontrada." );
+			sel_categorias.val( "" );
+			sort_icons( "" );
+		}
+	}
+
+	// Evento ao trocar de categoria
+	sel_categorias.on( "change", function(){
+		categoria = $( this ).val();
+		sort_icons( categoria );
+	});
+
+	// Evento ao trocar de ícone
+	sel_icones.on( "change", function(){
+		get_iconClass();
+	});
+
+	function get_iconClass(){
+		icon_class = sel_icones.val();
+		$( "#iconAboutGroupViewsel i" ).removeClass();
+		$( "#iconAboutGroupViewsel i" ).addClass( icon_class + " fa-3x" );
+	}
+
+</script>
